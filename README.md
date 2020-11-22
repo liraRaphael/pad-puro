@@ -38,7 +38,7 @@ Observe um exemplo a seguir.
 2. >  ./programa 10 10 10 arqA.dat arqB.dat arqC.dat arqD.dat
 
 ### Observação
-Caso não haja os respectivos arquivos, o programa gerará aleatoriamente
+Caso não haja os problema com algum dos parametros, o programa retornará erro
 
 ## Integrantes
 Teleprog
