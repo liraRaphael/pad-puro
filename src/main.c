@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<omp.h>
 #include<time.h>
 #define posicao(I, J, COLUNAS) ((I)*(COLUNAS) + (J))
 
@@ -30,9 +29,8 @@ float random_number();
 float * alocar(int dimensaoA,int dimensaoB);
 float * gerarMatriz(char * path,int dimensaoA,int dimensaoB);
 float * lerArquivo(char * path,int dimensaoA,int dimensaoB);
-float * calculaMatrizAB(float * matrizA,float * matrizB);
-float * calculaMatrizDABC();
-double reducaoMatrizD();
+void calculaMatrizDABC();
+void reducaoMatrizD();
 
 
 
@@ -45,7 +43,8 @@ double reducaoMatrizD();
  *
 **/
 int 
-    y,w,v; //variavel que guardará os valores da coluna
+    y,w,v, //variavel que guardará os valores da coluna
+	i,j,k; // variaveis de controle
 
 //aloca e le os arquivos do vetor
 float 
@@ -54,7 +53,9 @@ float
 	* matrizC, 
 	* matrizD,
 	* matrizAB;
-
+	
+double
+	reducao;	//salvara o resultado da redução
 
 /***
  *
@@ -156,11 +157,7 @@ float * lerArquivo(char * path,int dimensaoA,int dimensaoB){
 * - Calcula a matriz D = (A x B) x C
 *
 */
-float * calculaMatrizDABC(){
-
-	int
-		i,j,k;
-		  
+void calculaMatrizDABC(){  
 		  
 	for(i=0;i<y;i++){	       							
 		for(j=0;j<v;j++){	         						
@@ -176,25 +173,17 @@ float * calculaMatrizDABC(){
 	    }	
 	}
 
- 
-	return matrizD;
- 
 }
 
 
-double reducaoMatrizD(){
-  
-	int
-		i;
-  
-	double
-    	reducao = 0;
+void reducaoMatrizD(){
+    
+	reducao = 0;
     
 	for(i=0;i<y;i++){             
 		reducao += matrizD[i];
 	}
- 
-	return reducao;
+
  
 }
 
@@ -216,16 +205,8 @@ int main(int argc,char ** argv){
 		return 1;
 	}	
  
-  
-  	int
-    	i;
-    
 	clock_t 
 		tIni,tFim;  	
-  
-  	double
-		reducao;	//salvara o resultado da redução
-		
 		
 	// atribui os valores de dimensão da matriz
    	y = atoi(argv[1]);
@@ -257,8 +238,8 @@ int main(int argc,char ** argv){
 
    	//grava o tempo incial
    	tIni = clock();     
-   	matrizD = calculaMatrizDABC();
-   	reducao = reducaoMatrizD();	  
+   	calculaMatrizDABC();
+   	reducaoMatrizD();	  
 	//grava o tempo final
 	tFim = clock();
 	
