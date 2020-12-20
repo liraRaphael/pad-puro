@@ -42,20 +42,10 @@ double reducaoMatriz(float * matriz, int dimensaoA, int dimensaoB);
  *
 **/
 
-  //aloca e le os arquivos do vetor
-  float 
-  	* matrizA, 
-  	* matrizB, 
-  	* matrizC, 
-  	* matrizD,
-  	* matrizAB;
-
 int 
     y,w,v, //variavel que guardará os valores da coluna
 	i,j,k; // variaveis de controle
 
-double
-  	reducao;	//salvara o resultado da redução
 
 /***
  *
@@ -193,6 +183,18 @@ int main(int argc,char ** argv){
 		printf("argumentos invalidos!\n");
 		return 1;
 	}	
+	
+	//aloca e le os arquivos do vetor
+	float 
+		* matrizA, 
+		* matrizB, 
+		* matrizC, 
+		* matrizD,
+		* matrizAB;
+	
+	
+	double
+	  	reducao;	//salvara o resultado da redução
  
 	clock_t 
 		tIni,tFim;  	
