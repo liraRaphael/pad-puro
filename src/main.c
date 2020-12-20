@@ -29,9 +29,8 @@ float random_number();
 float * alocar(int dimensaoA,int dimensaoB);
 float * gerarMatriz(char * path,int dimensaoA,int dimensaoB);
 float * lerArquivo(char * path,int dimensaoA,int dimensaoB);
-void calculaMatrizDABC();
-void reducaoMatrizD();
-
+float * calculaMatriz(float * matrizA, float * matrizB,int dimensaoA,int dimensaoB,int dimensaoC);
+double reducaoMatriz(float * matriz, int dimensaoA, int dimensaoB);
 
 
 /***
@@ -71,23 +70,10 @@ float random_number(){
 }
 
 
-// inicializa uma matriz com o valor 0.0
-float * zeraMatriz(float * matriz, int dimensaoA, int dimensaoB){
-	int 
-		i,
-		MAX = dimensaoA * dimensaoB;
-		
-	for(i = 0;i<MAX;i++){
-		matriz[i] = 0.0;
-	}	
-	
-	return matriz;
-}
-
 // aloca dinamicamente como proposto pelo professor
 float * alocar(int dimensaoA,int dimensaoB){
 	float * ponteiro;
-	ponteiro = malloc(sizeof(float) * dimensaoA * dimensaoB);	
+	ponteiro = calloc(sizeof(float), dimensaoA * dimensaoB);	
 	return ponteiro;
 }
 
@@ -154,36 +140,39 @@ float * lerArquivo(char * path,int dimensaoA,int dimensaoB){
 /**
 *
 *
-* - Calcula a matriz D = (A x B) x C
+* - Calcula a matriz (A x B)
 *
 */
-void calculaMatrizDABC(){  
-		  
-	for(i=0;i<y;i++){	       							
-		for(j=0;j<v;j++){	         						
-			for(k=0;k<w;k++){	
-				matrizAB[posicao(i,j,v)] += (matrizA[posicao(i,k,w)] * matrizB[posicao(k,j,v)]) ;										
+float * calculaMatriz(float * matrizA, float * matrizB,int dimensaoA,int dimensaoB,int dimensaoC){
+	
+	float
+		* matriz = alocar(dimensaoA,dimensaoC);
+		
+	for(i=0;i<dimensaoA;i++){	       							
+		for(j=0;j<dimensaoB;j++){	         						
+			for(k=0;k<dimensaoC;k++){	
+				matriz[posicao(i,j,dimensaoC)] += (matrizA[posicao(i,k,dimensaoB)] * matrizB[posicao(k,j,dimensaoC)]) ;										
 			}
 		}					
 	}
-
-	for(i=0;i<y;i++){	 
-	    for(j=0;j<v;j++){	      
-			  matrizD[i] += matrizAB[posicao(i,j,v)] * matrizC[j];							
-	    }	
-	}
-
+	
+	return matriz;
+	
 }
 
-
-void reducaoMatrizD(){
+double reducaoMatriz(float * matriz, int dimensaoA, int dimensaoB){
     
-	reducao = 0;
+    int
+    	MAX = dimensaoA * dimensaoB;
     
-	for(i=0;i<y;i++){             
-		reducao += matrizD[i];
+	double
+		resultado = 0;
+    
+	for(i=0;i<MAX;i++){             
+		resultado += matriz[i];
 	}
 
+	return resultado;
  
 }
 
@@ -218,8 +207,8 @@ int main(int argc,char ** argv){
 	matrizB = lerArquivo(argv[5],w,v); 
 	matrizC = lerArquivo(argv[6],v,1); 
 	
-	// gera uma matriz AB limpa
-	matrizAB = zeraMatriz(alocar(y,v),y,v);
+	// gera uma matriz AB
+	matrizAB = alocar(y,v);
 		
 	if(y == 0 || w == 0 || v == 0){
 		printf("Valor(es) y,w e/ou v invalido(s)!\n");
@@ -233,13 +222,16 @@ int main(int argc,char ** argv){
 	} 
  
 
- 	// gera e zera a "vetor" D
-	matrizD = zeraMatriz(alocar(y,1),y,1);
+ 	// gera a "vetor" D
+	matrizD = alocar(y,1);
 
    	//grava o tempo incial
-   	tIni = clock();     
-   	calculaMatrizDABC();
-   	reducaoMatrizD();	  
+   	tIni = clock();  
+	
+	matrizAB = calculaMatriz(matrizA,matrizB,y,w,v);
+	matrizD = calculaMatriz(matrizAB,matrizD,y,v,1);
+	reducao = reducaoMatriz(matrizD,v,1);	
+	  
 	//grava o tempo final
 	tFim = clock();
 	
