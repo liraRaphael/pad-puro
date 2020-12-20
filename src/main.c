@@ -41,20 +41,21 @@ double reducaoMatriz(float * matriz, int dimensaoA, int dimensaoB);
  *
  *
 **/
+
+  //aloca e le os arquivos do vetor
+  float 
+  	* matrizA, 
+  	* matrizB, 
+  	* matrizC, 
+  	* matrizD,
+  	* matrizAB;
+
 int 
     y,w,v, //variavel que guardará os valores da coluna
 	i,j,k; // variaveis de controle
 
-//aloca e le os arquivos do vetor
-float 
-	* matrizA, 
-	* matrizB, 
-	* matrizC, 
-	* matrizD,
-	* matrizAB;
-	
 double
-	reducao;	//salvara o resultado da redução
+  	reducao;	//salvara o resultado da redução
 
 /***
  *
@@ -146,14 +147,14 @@ float * lerArquivo(char * path,int dimensaoA,int dimensaoB){
 float * calculaMatriz(float * matrizA, float * matrizB,int dimensaoA,int dimensaoB,int dimensaoC){
 	
 	float
-		* matriz = alocar(dimensaoA,dimensaoC);
-		
+		* matriz = alocar(y,v);
+   
 	for(i=0;i<dimensaoA;i++){	       							
 		for(j=0;j<dimensaoB;j++){	         						
 			for(k=0;k<dimensaoC;k++){	
-				matriz[posicao(i,j,dimensaoC)] += (matrizA[posicao(i,k,dimensaoB)] * matrizB[posicao(k,j,dimensaoC)]) ;										
-			}
-		}					
+				matriz[posicao(i,k,dimensaoC)] += (matrizA[posicao(i,j,dimensaoB)] * matrizB[posicao(j,k,dimensaoC)]) ;		 								
+			}      	
+		}			
 	}
 	
 	return matriz;
@@ -169,13 +170,12 @@ double reducaoMatriz(float * matriz, int dimensaoA, int dimensaoB){
 		resultado = 0;
     
 	for(i=0;i<MAX;i++){             
-		resultado += matriz[i];
+		resultado += matriz[i];     
 	}
 
 	return resultado;
  
 }
-
 
 
 /***
@@ -206,10 +206,7 @@ int main(int argc,char ** argv){
 	matrizA = lerArquivo(argv[4],y,w); 
 	matrizB = lerArquivo(argv[5],w,v); 
 	matrizC = lerArquivo(argv[6],v,1); 
-	
-	// gera uma matriz AB
-	matrizAB = alocar(y,v);
-		
+ 		
 	if(y == 0 || w == 0 || v == 0){
 		printf("Valor(es) y,w e/ou v invalido(s)!\n");
 		return 1;
@@ -220,17 +217,13 @@ int main(int argc,char ** argv){
 		printf("Matriz(es) não carregada(s)!\n");	
 		return 1;
 	} 
- 
-
- 	// gera a "vetor" D
-	matrizD = alocar(y,1);
 
    	//grava o tempo incial
    	tIni = clock();  
 	
 	matrizAB = calculaMatriz(matrizA,matrizB,y,w,v);
-	matrizD = calculaMatriz(matrizAB,matrizD,y,v,1);
-	reducao = reducaoMatriz(matrizD,v,1);	
+	matrizD = calculaMatriz(matrizAB,matrizC,y,v,1);  
+	reducao = reducaoMatriz(matrizD,y,1);	
 	  
 	//grava o tempo final
 	tFim = clock();
@@ -250,5 +243,5 @@ int main(int argc,char ** argv){
 	fclose(arquivo);	
 	
 	return 0;  
-  
+   
 }
